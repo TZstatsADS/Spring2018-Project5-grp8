@@ -79,5 +79,4 @@ shinyServer(function(input, output) {
     pred
   })
   
-  
 })
