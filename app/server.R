@@ -8,29 +8,30 @@
 #
 
 library(shiny)
-library(e1071)
+library(xgboost)
+library(randomForest)
 
-# preprocessing test dataframe
-transform_df <- function(df){
-  colnames(df) <- c("X1","X2","X4","X5","X12","X13","X14","X15","X16","X17","X18","X19","X20","X21","X22","X23")  
-  
-  df$X2_1 <- ifelse(df$X2==1,1,0)
-  df$X2_2 <- ifelse(df$X2==2,1,0)
-  df$X4_1 <- ifelse(df$X4==1,1,0)
-  df$X4_2 <- ifelse(df$X4==2,1,0)
-  df <- df[,-c(2:3)]
-  
-  scaled_df <- scale(df)
-  return(scaled_df)
+# Functions
+pred_switch <- function(pred){
+  return(ifelse(pred==1,"Yes","No"))
 }
 
-# Define server logic required to draw a histogram
+
 shinyServer(function(input, output) {
   
-  load("./model_linear.rda")
-  load("./model_RBF.rda")
+  # Load models
+  load("./model_xgb.rda")
+  load("./model_rf.rda")
   
   # Inputs
+  
+  past1 <- reactive({past1 <- input$past1})
+  past2 <- reactive({past2 <- input$past2})
+  past3 <- reactive({past3 <- input$past3})
+  past4 <- reactive({past4 <- input$past4})
+  past5 <- reactive({past5 <- input$past5})
+  past6 <- reactive({past6 <- input$past6})
+  
   bill1 <- reactive({bill1 <- input$bill1})
   bill2 <- reactive({bill2 <- input$bill2})
   bill3 <- reactive({bill3 <- input$bill3})
@@ -45,9 +46,11 @@ shinyServer(function(input, output) {
   payment5 <- reactive({payment <- input$payment5})
   payment6 <- reactive({payment <- input$payment6})
   
-  
+  credit <- reactive({credit <- input$credit})
+  age <- reactive({age <- input$age})
   marriage <- reactive({marriage <- input$marriage})
   gender <- reactive({gender <- input$gender})
+  education <- reactive({education <- input$education})
   
   filedata <- eventReactive(input$test,{
     read.csv(input$test$datapath)
@@ -73,10 +76,29 @@ shinyServer(function(input, output) {
   )
   
   output$predtable <- renderDataTable({
-    data_scaled <- transform_df(filedata()[,-1])
-    pred_lin <- predict(model_linear,data_scaled)
-    pred <- data.frame("ID" = 1:nrow(filedata()),"Linear SVM"=pred_lin)
+    test_Dmat <- xgb.DMatrix(as.matrix(filedata()[,-1]))
+    pred_xgb <- predict(model,test_Dmat)
+    pred_rf <- predict(final_rf,filedata()[,-1])
+    pred <- data.frame("ID" = 1:nrow(filedata()),"Xgboost"=pred_switch(pred_xgb),"Random_Forest"=pred_switch(pred_rf))
     pred
   })
+  
+  output$predind <- renderText({
+    obs_vec <- c(credit(),gender(),education(),marriage(),age(),
+                 past1(),past2(),past3(),past4(),past5(),past6(),
+                 bill1(),bill2(),bill3(),bill4(),bill5(),bill6(),
+                 payment1(),payment2(),payment3(),payment4(),payment5(),payment6())
+    obs_vec <- as.numeric(obs_vec)
+    obs_mat <- t(as.matrix(obs_vec))
+    obs_Dmat <- xgb.DMatrix(as.matrix(obs_mat))
+    pred_xgb_ind <- predict(model,obs_Dmat)
+    pred_switch(pred_xgb_ind)
+  })
+  
+  
+  eventReactive(input$predict,{
+    
+    })
+
   
 })
