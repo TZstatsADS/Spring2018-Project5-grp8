@@ -24,7 +24,7 @@ dashboardPage(
                          menuSubItem("About Team",tabName = "AboutTeam")),
                 menuItem("Algorithms Evaluation", tabName = "Evaluation",icon = icon("bar-chart-o")),
                 menuItem("Multiple Predictions",tabName = "MultiplePrediction",icon = icon("credit-card")),
-                menuItem("Single Prediction",tabName = "SinglePrediction",icon = icon("cc-visa"))
+                menuItem("Individual Prediction",tabName = "SinglePrediction",icon = icon("cc-visa"))
                 ),
     hr()
   ),
