@@ -17,7 +17,7 @@ dashboardPage(
   
   dashboardSidebar(
     width = 260,
-    sidebarMenu(id="tabs",
+    sidebarMenu(id = "tabs",
                 menuItem("Welcome",tabName = "Welcome1", icon = icon("book")),
                 menuItem("Introduction",  icon = icon("file-text-o"),
                          menuSubItem("Read Me",tabName = "ReadMe"),

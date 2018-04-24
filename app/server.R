@@ -61,7 +61,6 @@ shinyServer(function(input, output) {
   output$testtable <- renderDataTable(
     {
       filedata()
-      
       #colnames(tbl) <- c("LIMIT_BAL","SEX","MARRIAGE",
       #                   "AGE","BILL_AMT1","BILL_AMT2",
       #                   "BILL_AMT3","BILL_AMT4","BILL_AMT5",
