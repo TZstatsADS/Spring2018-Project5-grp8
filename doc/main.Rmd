@@ -79,11 +79,6 @@ run.test=TRUE # run evaluation on an independent test set
 
 Using cross-validation or independent test set evaluation, we compare the performance of different classifiers or classifiers with different specifications.
 
-```{r model_setup}
-#model_values <- seq(3, 11, 2)
-#model_labels = paste("GBM with depth =", model_values)
-```
-
 ### Step 2: Process training and testing data.
 
 ```{r}
