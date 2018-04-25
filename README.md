@@ -1,4 +1,4 @@
-﻿# ADS Project 5: 
+﻿# ADS Project 5: Credit Risk Modeling using Machine Learning Techniques and its Data Visualization
 
 Term: Spring 2018
 
@@ -38,8 +38,13 @@ Data Source : https://archive.ics.uci.edu/ml/datasets/default+of+credit+card+cli
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
 
 Chenfei Jiang:
+
 Michael Utomo:
+
 Jingtian Yao:
++ train the logistic regression model and the SVM model
++ build the Shiny App
++ make presentation power point and give presentation
 
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
