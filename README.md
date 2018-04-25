@@ -4,10 +4,13 @@ Term: Spring 2018
 
 + Team # 8
 + Projec title: Credit Risk Modeling using Machine Learning Techniques and its Data Visualization
-+ Team members
++ Team members:
+
 	Chenfei Jiang
+	
 	Michael Utomo
-	Jingtian Yao
+	
+	Jingtian Yao (jy2867@columbia.edu)
 
 + Project summary: In this project, we created a model to give credict card default prediction based on five different algorithms: Logistic Regression, Support Vector Machine, Random Forest, Xgboost and Neural Network. After conducting model selection and evaluation; by comparing the prediction accuracy as well as the computation time, the Xgboost model outperforms all others as shown below.
 
