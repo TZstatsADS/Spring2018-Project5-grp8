@@ -1,4 +1,4 @@
-# ADS Project 5: 
+﻿# ADS Project 5: 
 
 Term: Spring 2018
 
@@ -9,7 +9,28 @@ Term: Spring 2018
 	Michael Utomo
 	Jingtian Yao
 
-+ Project summary: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
++ Project summary: In this project, we created a model to give credict card default prediction based on five different algorithms: Logistic Regression, Support Vector Machine, Random Forest, Xgboost and Neural Network. After conducting model selection and evaluation; by comparing the prediction accuracy as well as the computation time, the Xgboost model outperforms all others as shown below.
+
+![image](figs/evaluation.png)
+
+    Also, a Shiny App was build for our potential customers(e.g.bank and insurance company) to help them predict whether a credit card client will default in the next month.
+
+Our app includes three main components. Intro gives you a general idea of how this app works. Prediction is the core function interface where two types of predictions (individual and multiple) are provided. Given the requested information of certain credit card client, the default payment prediction (Yes = 1, No = 0) will be made. Appendix provides more detailed description about the technical part. Principles of 5 different algorithms employed and the performance comparison between them are illustrated; while reference and the original data source are given as well.
+
+home page
+![image](figs/mainpage.png)
+
+multiple prediction page
+![image](figs/multiple_prediction.png)
+![image](figs/multiple_prediction2.png)
+![image](figs/multiple_prediction3.png)
+
+algorithms evaluation page
+![image](figs/algorithm.png)
+
+individual prediction page
+![image](figs/individual_prediction.png)
+ 
 	
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
 
