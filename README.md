@@ -17,6 +17,8 @@ Term: Spring 2018
 
 Our app includes three main components. Intro gives you a general idea of how this app works. Prediction is the core function interface where two types of predictions (individual and multiple) are provided. Given the requested information of certain credit card client, the default payment prediction (Yes = 1, No = 0) will be made. Appendix provides more detailed description about the technical part. Principles of 5 different algorithms employed and the performance comparison between them are illustrated; while reference and the original data source are given as well.
 
+website https://lanceyjtcolumbia.shinyapps.io/default_payment/
+
 home page
 ![image](figs/mainpage.png)
 
@@ -31,6 +33,7 @@ algorithms evaluation page
 individual prediction page
 ![image](figs/individual_prediction.png)
  
+Data Source : https://archive.ics.uci.edu/ml/datasets/default+of+credit+card+clients
 	
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
 
