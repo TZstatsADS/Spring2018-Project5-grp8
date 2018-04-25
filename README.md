@@ -26,7 +26,7 @@ multiple prediction page
 ![image](figs/multiple_prediction3.png)
 
 algorithms evaluation page
-![image](figs/algorithm.png)
+![image](figs/algorithm.PNG)
 
 individual prediction page
 ![image](figs/individual_prediction.png)
