@@ -124,7 +124,7 @@ Five different models are used to make prediction on wether a credict card clien
 
 ## Model 1: Support Vector Machine
 
-In parameter selecting part, for linear SVM, we select cost from 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000 and 10000. For RBF kernal, we select cost from 0.01, 0.1, 1, 10, 100, 1000, 10000, 100000 and 1000000, and selet gamma from 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000 and 10000.
+In parameter selecting part, for linear SVM, we select cost from 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000 and 10000. For RBF kernal, we select cost from 0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1, 10 and 100, and selet gamma from 0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000 and 10000.
 
 
 ```{r}
@@ -175,7 +175,7 @@ save(model_linear,file = "model_linear.rda")
 
 #RBF kernel SVM with soft margin 
 #tuned_RBF <- tune.svm(as.factor(Y)~., data = as.data.frame(train_scaled),
-#                      gamma = 10^(-4:4), cost = 10^(-2:6),
+#                      gamma = 10^(-4:4), cost = 10^(-6:2),
 #                      kernel = "radial",
 #                      tunecontrol = tune.control(cross = 5))
 #summary(tuned.RBF)
@@ -204,7 +204,7 @@ if(run.cv){
 # RBF kernal SVM
 if(run.cv){
   tuned_RBF <- tune.svm(as.factor(Y)~., data = as.data.frame(train_scaled),
-                        gamma = 10^(-4:4), cost = 10^(-2:6),
+                        gamma = 10^(-4:4), cost = 10^(-6:2),
                         kernel = "radial",
                         tunecontrol = tune.control(cross = 5))
   best_par_RBF <- tuned_RBF$best.parameters
