@@ -1,0 +1,12 @@
+name: default_payment
+title: default_payment
+username:
+account: lanceyjtcolumbia
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 330290
+bundleId: 1339211
+url: https://lanceyjtcolumbia.shinyapps.io/default_payment/
+when: 1524684015.59072
+asMultiple: FALSE
+asStatic: FALSE

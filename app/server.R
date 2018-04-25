@@ -83,15 +83,16 @@ shinyServer(function(input, output) {
   })
   
   output$predind <- renderText({
-    obs_vec <- c(credit(),gender(),education(),marriage(),age(),
+    obs_vec <- reactive({obs_vec <- c(credit(),gender(),education(),marriage(),age(),
                  past1(),past2(),past3(),past4(),past5(),past6(),
                  bill1(),bill2(),bill3(),bill4(),bill5(),bill6(),
-                 payment1(),payment2(),payment3(),payment4(),payment5(),payment6())
-    obs_vec <- as.numeric(obs_vec)
-    obs_mat <- t(as.matrix(obs_vec))
-    obs_Dmat <- xgb.DMatrix(as.matrix(obs_mat))
-    pred_xgb_ind <- predict(model,obs_Dmat)
-    pred_switch(pred_xgb_ind)
+                 payment1(),payment2(),payment3(),payment4(),payment5(),payment6())})
+    obs_vec_numeric <- reactive({obs_vec_numeric <- as.numeric(obs_vec())})
+    obs_mat <- reactive({obs_mat <- t(as.matrix(obs_vec_numeric()))}) 
+    obs_Dmat <- reactive({obs_mat <- xgb.DMatrix(as.matrix(obs_mat()))}) 
+    pred_xgb_ind <- reactive({predict(model,obs_Dmat())}) 
+    ans <- pred_switch(pred_xgb_ind())
+    ans
   })
   
   

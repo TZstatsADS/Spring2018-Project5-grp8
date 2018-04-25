@@ -72,7 +72,7 @@ dashboardPage(
                                 p("A nonlinear statistical model based on the structure and functions of biological neural networks when relationships between inputs and outputs is complex.") 
                                ),
                        tabPanel(title = "Algorithms Evaluation",width = 12,
-                                p("accuracy")),
+                                img(src = "evaluation.png")),
                        tabPanel(title = "Reference",width = 12,
                                 p("[1] Baesens, B., Setiono, R.,Mues, C., & Vanthienen, J. (2003).Using neural network rule extraction and decision tables for credit-risk evaluation.Management Science."),
                                 p("[2] Baesens, B., Van Gestel, T., Viaene, S., Stepanova, M., Suykens, J., & Vanthienen, J. (2003). Benchmarking state-of-the-art classification algorithms for credit scoring. Journal of the Operational Research Society."),
@@ -108,6 +108,7 @@ dashboardPage(
                                 dataTableOutput("testtable"),
                                 tags$style(type="text/css", '#myTable tfoot {display:none;}')),
                        tabPanel(title = "Prediction",solidHeader = T,
+                                strong("Note: Xgboost predicion result is recommended, use random forest result as a reference."),
                                 dataTableOutput("predtable")))
               )),
       
