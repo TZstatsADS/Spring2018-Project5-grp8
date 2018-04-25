@@ -42,8 +42,7 @@ Set the working directory to the data folder. Specify the training and the testi
 
 Provide directories for raw images. Training set and test set should be in different subfolders. 
 ```{r}
-#data <- read_xls("data.xls",sheet = "Data",range = "B1:Y30002")
-#data <- data[-1,]
+#data <- read_xls("../data/data.xls",sheet = "Data",range = "A1:Y30002")
 #data <- apply(data,2,as.numeric)
 #data <- as.data.frame(data)
 
@@ -68,9 +67,7 @@ In this chunk, ,we have a set of controls for the evaluation experiments.
 
 + (T/F) cross-validation on the training set
 + (number) K, the number of CV folds
-+ (T/F) process features for training set
 + (T/F) run evaluation on an independent test set
-+ (T/F) process features for test set
 
 ```{r exp_setup}
 run.cv=FALSE # do not run cross-validation on the training set
@@ -83,22 +80,9 @@ Using cross-validation or independent test set evaluation, we compare the perfor
 ### Step 2: Process training and testing data.
 
 ```{r}
-payment.mean <- function(r){
-  return(mean(r[18:23]))
-}
-
-bill.mean <- function(r){
-  return(mean(r[12:17]))
-}
-
-
-train$X24 <- apply(train,1,bill.mean)# Average bill statement
-train$X25 <- apply(train,1,payment.mean) # Average payment
 train$X4[which(train$X4!=1)] <- 2 # other marital status merged to unmarried
 train$Y <- as.factor(train$Y)
 
-test$X24 <- apply(test,1,bill.mean)# Average bill statement
-test$X25 <- apply(test,1,payment.mean) # Average payment
 test$X4[which(test$X4!=1)] <- 2 # other marital status merged to unmarried
 test$Y <- as.factor(test$Y)
 
@@ -119,8 +103,6 @@ In parameter selecting part, for linear SVM, we select cost from 0.0001, 0.001, 
 
 
 ```{r}
-train$X4[which(train$X4!=1)] <- 2 # Merge unmarried states
-test$X4[which(test$X4!=1)] <- 2 # Merge unmarried status
 train <- train[,c(1,2,4,5,12:17,18:24)]
 test <- test[,c(1,2,4,5,12:17,18:24)]
 
@@ -140,47 +122,12 @@ transform_df <- function(df){
 }
 ```
 
+
 ```{r}
 train_scaled <- transform_df(train)
 test_scaled <-transform_df(test)
 
-#linear SVM with soft margin
-#time_CV_lin <- system.time(
-#  tuned_lin <- tune.svm(as.factor(Y)~., data = as.data.frame(train_scaled),
-#                      cost = 10^(-4:4), kernel = "linear",
-#                      tunecontrol = tune.control(cross = 5)))
-#summary(tuned_lin)
-#best_par_lin <- tuned_lin$best.parameters
 
-load("../app/model_linear.rda")
-
-model_linear <- svm(as.factor(Y)~.,data = train_scaled,
-                      cost = 0.1,kernel = "linear")
-pred_linear <- predict(model_linear,test_scaled[,-ncol(test_scaled)])
-table(pred_linear)
-err_lin <- mean(pred_linear!=test$Y)
-
-err_lin
-
-save(model_linear,file = "model_linear.rda")
-
-#RBF kernel SVM with soft margin 
-#tuned_RBF <- tune.svm(as.factor(Y)~., data = as.data.frame(train_scaled),
-#                      gamma = 10^(-4:4), cost = 10^(-6:2),
-#                      kernel = "radial",
-#                      tunecontrol = tune.control(cross = 5))
-#summary(tuned.RBF)
-
-model_RBF <- svm(as.factor(Y)~., data = train_scaled,
-                 cost = 10, gamma = 0.001, kernel = "radial")
-pred_RBF <- predict(model_RBF, test_scaled[,-ncol(test_scaled)])
-err_RBFSVM <- mean(pred_RBF!=test$Y)
-err_RBFSVM
-
-save(model_RBF,file = "model_RBF.rda")
-```
-
-```{r}
 # Corss Validation
 # linear SVM
 if(run.cv){
@@ -204,12 +151,37 @@ if(run.cv){
 }
 ```
 
+
+```{r}
+load("../app/model_linear.rda")
+
+#model_linear <- svm(as.factor(Y)~.,data = train_scaled,
+#                      cost = best_par_lin,kernel = #"linear")
+
+pred_linear <- predict(model_linear,test_scaled[,-ncol(test_scaled)])
+err_lin <- mean(pred_linear!=as.numeric(test$Y))
+err_lin
+
+
+#RBF kernel SVM with soft margin 
+load("../app/model_RBF.rda")
+
+#model_RBF <- svm(as.factor(Y)~., data = train_scaled,
+#                 cost = best_par_RBF[1], gamma = best_par_RBF[2], kernel = #"radial")
+
+pred_RBF <- predict(model_RBF, test_scaled[,-ncol(test_scaled)])
+err_RBFSVM <- mean(pred_RBF!=test$Y)
+err_RBFSVM
+
+```
+
 ## Model 2: Random Forest
 
 Data preprocessing
 
 ```{r}
-df <- read.csv('data.csv', skip=1) #Read the data
+df <- read.csv('../data/data.csv', skip=1) #Read the data
+df <- df[,-1]
 df$default.payment.next.month <- as.factor(df$default.payment.next.month)
 #Convert target variable to factor type
 df$ID <- NULL #Remove extraneous variables
@@ -228,11 +200,10 @@ train.data <- df[-test.i,]
 rf_tune <- expand.grid(mtry=2, 
                        ntree = seq(100, 1000, by = 250))
 rf_tune$accuracy <- numeric(nrow(rf_tune))
-#, 2, 3, 4, 5, 7, 10, 12, 15, 20, 24
- 
 
 #Tune parameters to find best model
-for(i in 1:nrow(rf_tune)){
+if(run.cv){
+  for(i in 1:nrow(rf_tune)){
         our.rf <- randomForest(default.payment.next.month ~., 
                                data=train.data, na.action = na.omit,
                                mtry=rf_tune$mtry[i],
@@ -241,34 +212,20 @@ for(i in 1:nrow(rf_tune)){
         rf_tune$accuracy[i] <- mean(rf.preds == test.data$default.payment.next.month, na.rm = TRUE)
 }
 best_rf_params <- rf_tune[which.max(rf_tune$accuracy),]
-best_rf_params
- 
-final_rf <- randomForest(default.payment.next.month ~., 
-                               data=train.data, na.action = na.omit,
-                               mtry=2,
-                               ntree=600) 
+} else{
+  best_rf_params <- c(2,600)
+}
+
+load("../app/model_rf.rda")
+#final_rf <- randomForest(default.payment.next.month ~., 
+#                               data=train.data, na.action = na.omit,
+#                               mtry=best_rf_params[1],
+#                               ntree=best_rf_params[2]) 
+
 rf.pred_final <- predict(final_rf, test.data)
+err_rf <- mean(rf.pred_final!=test.data$default.payment.next.month)
+err_rf
 
-#mtry:
-#1: 80.8
-#2: 81.5
-#3: 81.5
-#4: 81.4
- 
-
-# Plot accuracy by mtry parameter
-ggplot(rf_tune, aes(x=mtry, y=accuracy, col = ntree)) + 
-        geom_point() + 
-        ggtitle('Accuracy by Mtry parameter')
-
-
-# Re-train a model with best parameters and visualize the variable importance
- 
-best.rf <- randomForest(default.payment.next.month ~., 
-                        data=train.data, na.action = na.omit,
-                        mtry=best_rf_params$mtry,
-                        ntree=best_rf_params$ntree)
-varImpPlot(best.rf)
 ```
 
 
@@ -290,7 +247,7 @@ xgb.tune$accuracy <- numeric(nrow(xgb.tune))
  
 # Tune parameters to find best model
 #Each iteration performs 5-fold CV with 50 rounds of training XGBoost. 
-
+if(run.cv){
 set.seed(04182018)
 for(i in 1:nrow(xgb.tune)){
         t1 = Sys.time()
@@ -321,47 +278,24 @@ for(i in 1:nrow(xgb.tune)){
 # Show best parameters
 best_gb_params <- xgb.tune[which.max(xgb.tune$accuracy),]
 best_gb_params
+} else{
+    load("../app/model_xgb.rda")
+}
+
 ```
 
 ```{r}
-
-train_df <- cbind(df.features,"label" = as.numeric(df.target)-1)
-train_df[,ncol(train_df)] <- as.factor(train_df[,ncol(train_df)])
-train_Dmat <- xgb.DMatrix(as.matrix(train_df))
-
-model <- xgboost(data = as.matrix(df.features), label = as.numeric(df.target)-1,
-                 nrounds = 100, objective = "multi:softmax", num_class = 2)
-
-  param <- list(  
-          # General Parameters  
-          booster            = "gbtree",          # default  
-          silent             = 0,                 # default  
-          # Booster Parameters  
-          eta                = 0.5,           # default = 0.30  
-          gamma              = 0.5,                 # default  
-          max_depth          = 4,     # default = 6  
-          min_child_weight   = 1,                 # default  
-          subsample          = 1,                 # default = 1  
-          colsample_bytree   = 1,                 # default = 1  
-          num_parallel_tree  = 1,                 # default  
-          lambda             = 0,                 # default  
-          lambda_bias        = 0,                 # default  
-          alpha              = 0,                 # default  
-          # Task Parameters  
-          objective          = "multi:softmax",   # default = "reg:linear"  
-          num_class          = 2,                 # default = 0  
-          base_score         = 0.5  ,               # default  
-          eval_metric        = "merror"           # default = "rmes"  
-        )  
-
-
-model_xgb <- xgb.train(params=param, data=train_Dmat,nrounds = 100,
-                       verbose = F)
-
+#model <- xgboost(data = as.matrix(df.features), label = as.numeric(df.target)-1,
+#                 nrounds = 100, objective = "multi:softmax", num_class = 2)
+test.data <- apply(test.data, 2, function(x) as.numeric(x))
+test_Dmat <- xgb.DMatrix(as.matrix(test.data[,-ncol(test.data)]))
+pred_xgb <- predict(model,test_Dmat)
+err_xgb <- mean(pred_xgb!=test.data[,ncol(test.data)])
+err_xgb
 ``` 
 
 ## Model 4: Logistic Regression
-```{r}
+```{r, warning=FALSE}
 # Establish common downstream variables
 classColumn <- "Y"
 badIndicator <- 1
@@ -369,12 +303,12 @@ goodIndicator <- 0
 montonicConstraint <- "No"
 
 # Training data
-dataTrainingSample <- read.csv("train.csv")
+dataTrainingSample <- read.csv("../data/train.csv")
 dataTrainingSample <- dataTrainingSample[1:5999,]
 dataTrainingSample <- as.data.frame(dataTrainingSample)
 
 # Testing data
-dataTestingSample <- read.csv("test.csv")
+dataTestingSample <- read.csv("../data/test.csv")
 dataTestingSample <- as.data.frame(dataTestingSample)
 
 # Get totals for downstream 
@@ -470,6 +404,13 @@ for (i in (1:length(Variables)))
 
 # Order from least to most predictive 
 logisticModels <- logisticModels[order(logisticModels$AUC),]
+
+tail(logisticModels)
+fit <- glm(default.payment.next.month~LIMIT_BAL+PAY_0+PAY_5,data = train.data,family = binomial("logit"))
+pred_log <- predict(fit,newdata = as.data.frame(test.data[,-ncol(test.data)]),type = "response")
+pred_log <- ifelse(pred_log>0.5,1,0)
+err_log <- mean(pred_log!=test.data[,ncol(test.data)])
+err_log
 ```
 
 ## Model 5: Neural Network
@@ -486,12 +427,9 @@ dataTestingSample$PREDICTION <- predict(MODEL, dataTestingSample[,-which(colname
 dataTestingSample$PREDICTION[dataTestingSample$PREDICTION>0.5]<-1
 dataTestingSample$PREDICTION[dataTestingSample$PREDICTION<=0.5]<-0
 dataTestingSample$PREDICTION == dataTestingSample$Y
-sum(dataTestingSample$PREDICTION == dataTestingSample$Y)/nrow(dataTestingSample)
-
-plotROC(as.matrix(dataTestingSample[,classColumn]), dataTestingSample$PREDICTION)
-
-plot.nnet(MODEL)
-```
+err_nn <- sum(dataTestingSample$PREDICTION != dataTestingSample$Y)/nrow(dataTestingSample)
+err_nn
+ ```
 Reference:
 https://gist.githubusercontent.com/Peque/41a9e20d6687f2f3108d/raw/85e14f3a292e126f1454864427e3a189c2fe33f3/nnet_plot_update.r
 
