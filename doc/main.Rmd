@@ -7,7 +7,7 @@ output: html_document
 
 ```{r}
 packages.used <- c("readxl", "ggplot2", "caret", "reshape2","randomForest",
-                   "xgboost","pROC","e071","InformationValue","devtools")
+                   "xgboost","pROC","e1071","InformationValue","devtools")
 
 # check packages that need to be installed.
 packages.needed <- setdiff(packages.used,
@@ -55,8 +55,9 @@ Provide directories for raw images. Training set and test set should be in diffe
 
 #write.csv(train,"train.csv")
 ##write.csv(test,"test.csv")
-train <- read.csv("train.csv")
-test <- read.csv("test.csv")
+
+train <- read.csv("../data/train.csv")
+test <- read.csv("../data/test.csv")
 train <- train[,-1]
 test <- test[,-1]
 ```
@@ -110,11 +111,6 @@ test$Y <- as.factor(test$Y)
 
 ### Step 3: Train classification models with training data.
 
-```{r}
-source("../lib/train.R")
-source("../lib/test.R")
-```
-
 Five different models are used to make prediction on wether a credict card client will default based on related information.
 
 ## Model 1: Support Vector Machine
@@ -156,7 +152,7 @@ test_scaled <-transform_df(test)
 #summary(tuned_lin)
 #best_par_lin <- tuned_lin$best.parameters
 
-load("./model_linear.rda")
+load("../app/model_linear.rda")
 
 model_linear <- svm(as.factor(Y)~.,data = train_scaled,
                       cost = 0.1,kernel = "linear")
