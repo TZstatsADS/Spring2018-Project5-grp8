@@ -7,7 +7,7 @@ output:
   html_document: default
 ---
 
-```{r}
+```{r, warning=FALSE}
 packages.used <- c("readxl", "ggplot2", "caret", "reshape2","randomForest",
                 "xgboost","pROC","e1071","InformationValue","devtools","nnet")
 
@@ -171,10 +171,10 @@ load("../app/model_RBF.rda")
 #model_RBF <- svm(as.factor(Y)~., data = train_scaled,
 #                 cost = best_par_RBF[1], gamma = best_par_RBF[2], kernel = #"radial")
 
-pred_RBF <- predict(model_RBF, test_scaled[,-ncol(test_scaled)])
+time1 <- system.time(pred_RBF <- predict(model_RBF, test_scaled[,-ncol(test_scaled)]))
 err_RBFSVM <- mean(pred_RBF!=test$Y)
-err_RBFSVM
-
+cat("error:",err_RBFSVM,"\n")
+cat("time:",time1[3])
 ```
 
 ## Model 2: Random Forest
@@ -224,10 +224,10 @@ load("../app/model_rf.rda")
 #                               mtry=best_rf_params[1],
 #                               ntree=best_rf_params[2]) 
 
-rf.pred_final <- predict(final_rf, test.data)
+time2 <- system.time(rf.pred_final <- predict(final_rf, test.data))
 err_rf <- mean(rf.pred_final!=test.data$default.payment.next.month)
-err_rf
-
+cat("error:",err_rf,"\n")
+cat("time:",time2)
 ```
 
 
@@ -291,9 +291,10 @@ best_gb_params
 #                 nrounds = 100, objective = "multi:softmax", num_class = 2)
 test.data <- apply(test.data, 2, function(x) as.numeric(x))
 test_Dmat <- xgb.DMatrix(as.matrix(test.data[,-ncol(test.data)]))
-pred_xgb <- predict(model,test_Dmat)
+time3 <- system.time(pred_xgb <- predict(model,test_Dmat))
 err_xgb <- mean(pred_xgb!=test.data[,ncol(test.data)])
-err_xgb
+cat("error:",err_xgb,"\n")
+cat("time:",time3)
 ``` 
 
 ## Model 4: Logistic Regression
@@ -409,10 +410,11 @@ logisticModels <- logisticModels[order(logisticModels$AUC),]
 
 tail(logisticModels)
 fit <- glm(default.payment.next.month~LIMIT_BAL+PAY_0+PAY_5,data = train.data,family = binomial("logit"))
-pred_log <- predict(fit,newdata = as.data.frame(test.data[,-ncol(test.data)]),type = "response")
+time4 <- system.time(pred_log <- predict(fit,newdata = as.data.frame(test.data[,-ncol(test.data)]),type = "response"))
 pred_log <- ifelse(pred_log>0.5,1,0)
 err_log <- mean(pred_log!=test.data[,ncol(test.data)])
-err_log
+cat("error:",err_log,"\n")
+cat("time:",time4)
 ```
 
 ## Model 5: Neural Network
@@ -425,13 +427,14 @@ dataTestingSample$Y <- as.factor(dataTestingSample$Y)
 # Plug in everything to a neural network
 FORMULA <- logisticModels[nrow(logisticModels), "Formula"]
 MODEL <- nnet(as.formula(FORMULA), data=dataTrainingSample, size = 2, rang = 0.1,decay = 5e-4, maxit = 200)
-dataTestingSample$PREDICTION <- predict(MODEL, dataTestingSample[,-which(colnames(dataTestingSample)=="Y")])
+time5 <- system.time(dataTestingSample$PREDICTION <- predict(MODEL, dataTestingSample[,-which(colnames(dataTestingSample)=="Y")]))
 
 dataTestingSample$PREDICTION[dataTestingSample$PREDICTION>0.5]<-1
 dataTestingSample$PREDICTION[dataTestingSample$PREDICTION<=0.5]<-0
 #dataTestingSample$PREDICTION == dataTestingSample$Y
 err_nn <- sum(dataTestingSample$PREDICTION != dataTestingSample$Y)/nrow(dataTestingSample)
-err_nn
+cat("error:",err_nn,"\n")
+cat("time:",time5)
 ```
 Reference:
 https://gist.githubusercontent.com/Peque/41a9e20d6687f2f3108d/raw/85e14f3a292e126f1454864427e3a189c2fe33f3/nnet_plot_update.r
