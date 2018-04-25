@@ -2,12 +2,14 @@
 title: "main_proj5"
 author: "Group 8"
 date: "April 24, 2018"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r}
 packages.used <- c("readxl", "ggplot2", "caret", "reshape2","randomForest",
-                   "xgboost","pROC","e1071","InformationValue","devtools")
+                "xgboost","pROC","e1071","InformationValue","devtools","nnet")
 
 # check packages that need to be installed.
 packages.needed <- setdiff(packages.used,
@@ -29,6 +31,7 @@ library(pROC)
 library(e1071)
 library(InformationValue)
 library(devtools)
+library(nnet)
 ```
 
 ### Step 0: Specify directories.
@@ -122,7 +125,6 @@ transform_df <- function(df){
 }
 ```
 
-
 ```{r}
 train_scaled <- transform_df(train)
 test_scaled <-transform_df(test)
@@ -160,7 +162,7 @@ load("../app/model_linear.rda")
 
 pred_linear <- predict(model_linear,test_scaled[,-ncol(test_scaled)])
 err_lin <- mean(pred_linear!=as.numeric(test$Y))
-err_lin
+#err_lin
 
 
 #RBF kernel SVM with soft margin 
@@ -416,6 +418,7 @@ err_log
 ## Model 5: Neural Network
 
 ```{r}
+options(warn = -1)
 # This is required for the nnet package
 dataTestingSample$Y <- as.factor(dataTestingSample$Y)
 
@@ -426,10 +429,10 @@ dataTestingSample$PREDICTION <- predict(MODEL, dataTestingSample[,-which(colname
 
 dataTestingSample$PREDICTION[dataTestingSample$PREDICTION>0.5]<-1
 dataTestingSample$PREDICTION[dataTestingSample$PREDICTION<=0.5]<-0
-dataTestingSample$PREDICTION == dataTestingSample$Y
+#dataTestingSample$PREDICTION == dataTestingSample$Y
 err_nn <- sum(dataTestingSample$PREDICTION != dataTestingSample$Y)/nrow(dataTestingSample)
 err_nn
- ```
+```
 Reference:
 https://gist.githubusercontent.com/Peque/41a9e20d6687f2f3108d/raw/85e14f3a292e126f1454864427e3a189c2fe33f3/nnet_plot_update.r
 
