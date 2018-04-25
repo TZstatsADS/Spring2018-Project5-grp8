@@ -59,8 +59,30 @@ dashboardPage(
       tabItem(tabName = "Evaluation",
               fluidRow(
                 tabBox(width = 12,
-                       tabPanel(title = "Algorithms Introductions",width = 12),
-                       tabPanel(title = "Algorithms Evaluation",width = 12)
+                       tabPanel(title = "Algorithms Introductions",width = 12,
+                                strong("Logistics Regression (LR)"),
+                                p("A special case of linear regression model where the dependent variable (DV) is categorical."),
+                                strong("Support Vector Machine (SVM)"),
+                                p("Supervised learning models which constructs a hyperplane or set of hyperplanes in a high- or infinite-dimensional space."),
+                                strong("Random Forest (RF)"),
+                                p("An ensemble learning method for classification, regression and other tasks that operate by constructing a multitude of decision trees at training time and outputting the class that is the mode of the classes (classification) or mean prediction (regression) of the individual trees."),
+                                strong("XGBoost"),
+                                p("An advanced implementation of gradient boosting algorithm by adding new models sequentially until no further improvement is achieved."),
+                                strong("Artificial Neural Network (ANN)"),
+                                p("A nonlinear statistical model based on the structure and functions of biological neural networks when relationships between inputs and outputs is complex.") 
+                               ),
+                       tabPanel(title = "Algorithms Evaluation",width = 12,
+                                p("accuracy")),
+                       tabPanel(title = "Reference",width = 12,
+                                p("[1] Baesens, B., Setiono, R.,Mues, C., & Vanthienen, J. (2003).Using neural network rule extraction and decision tables for credit-risk evaluation.Management Science."),
+                                p("[2] Baesens, B., Van Gestel, T., Viaene, S., Stepanova, M., Suykens, J., & Vanthienen, J. (2003). Benchmarking state-of-the-art classification algorithms for credit scoring. Journal of the Operational Research Society."),
+                                p("[3] Berry, M.,&Linoff, G. (2000). Mastering data mining: The art and science of customer relationship management. New York: John Wiley & Sons, Inc."),
+                                p("[4] Chou, M. (2006). Cash and credit card crisis in Taiwan. Business Weekly."),
+                                p("[5] Desai, V. S., Crook, J. N., & Overstreet, G. A. A. (1996). Comparison of neural networks and linear scoring models in the credit union environment. European Journal of Operational Research."),
+                                p("[6] Han, J., & Kamber, M. (2001). Data mining: Concepts and techniques. San Fransisco: Morgan Kaufmann."),
+                                p("[7] Hand, D. J., & Henley, W. E. (1997). Statistical classification methods in consumer credit scoring: A review. Journal of the Royal Statistical Society, Series A - Statistics in Society."),
+                                p("[8] Hand, D. J., Mannila, H., & Smyth, P. (2001). Data mining: Practical machine learning tools and techniques. Cambridge: MIT Press.")
+                                )
                        )
               )),
       
