@@ -4,17 +4,30 @@ Whenever we have team projects, there are always concerns on unequal contributio
 
 Therefore, you are required to post a *contribution statement* in the root README.md of your GitHub repo. Please beware that your GitHub repo will become public and remain public after the due date of the projects. 
 
-Post your title, team members, project abstract and a contribution statement in the README.md file.  This is a common practice for research scientific journals. 
-
-Below is an example. If no contribution statement is provided, we will insert a default statement that goes "**All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement**. "
-
+ 
 ---
-Sample project README statement.
++ Team # 8
++ Projec title: Credit Risk Modeling using Machine Learning Techniques and its Data Visualization
++ Team members:
 
-Project xxx
+	Chenfei Jiang (cj2526@columbia.edu)
+	
+	Michael Utomo (mu2251@columbia.edu)
+	
+	Jingtian Yao (jy2867@columbia.edu)
 
-Team members: Avi Bond, Comma Deed, En Funn, Gem Hon
 
-Summary: In this project, we developed a new method and improved the classification accuracy for images of cats and dogs to 99.9%
+[Contribution Statement] **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
 
-[Contribution Statement] AB, CD, EF and GH designed the study. AB and CD developed baseline classification model for evaluation. EF and GH explored feature engineering for improving the baseline model. AB, EF and GH discussed and designed the model evaluation protocol. CD carried out the computation for model evaluation. All team members contributed to the GitHub repository and prepared the presentation. All team members approve our work presented in our GitHub repository including this contribution statement.
+Chenfei Jiang:
++ build the Shiny App
++ write the main and readme
+
+Michael Utomo:
++ Build the machine learning algorithms: logistic regression +neural network, 
+Random forest, XGBoost
+
+Jingtian Yao:
++ train the logistic regression model and the SVM model
++ build the Shiny App
++ make presentation power point and give presentation

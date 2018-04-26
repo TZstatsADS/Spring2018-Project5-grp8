@@ -42,7 +42,7 @@ Data Source : https://archive.ics.uci.edu/ml/datasets/default+of+credit+card+cli
 
 Chenfei Jiang:
 + build the Shiny App
-+ write the main
++ write the main and readme
 
 Michael Utomo:
 + Build the machine learning algorithms: logistic regression +neural network, 
