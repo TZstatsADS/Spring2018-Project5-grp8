@@ -43,6 +43,8 @@ Data Source : https://archive.ics.uci.edu/ml/datasets/default+of+credit+card+cli
 Chenfei Jiang:
 
 Michael Utomo:
++ Build the machine learning algorithms: logistic regression +neural network, 
+Random forest, XGBoost
 
 Jingtian Yao:
 + train the logistic regression model and the SVM model
